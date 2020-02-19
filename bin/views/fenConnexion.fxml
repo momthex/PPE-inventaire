@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="291.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.Authentification">
+   <children>
+      <Button fx:id="btnConnexion" layoutX="113.0" layoutY="252.0" mnemonicParsing="false" onAction="#handleButtonConnexion" text="Connexion" />
+      <Label layoutX="69.0" layoutY="170.0" text="Login" />
+      <Label layoutX="26.0" layoutY="198.0" text="Mot de passe" />
+      <PasswordField fx:id="txtPassword" layoutX="107.0" layoutY="194.0" />
+      <TextField fx:id="txtLogin" layoutX="107.0" layoutY="166.0" />
+      <ImageView fitHeight="150.0" fitWidth="247.0" layoutX="33.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../asset/logogsbinventaire.png" />
+         </image></ImageView>
+      <Label fx:id="lblErreurConnexion" alignment="CENTER" layoutX="24.0" layoutY="227.0" prefHeight="17.0" prefWidth="234.0" text="Login ou mot de passe incorrecte" textFill="RED" visible="false" />
+   </children>
+</AnchorPane>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ConsultationStock">
+   <children>
+      <TableView fx:id="tableProduit" layoutX="28.0" layoutY="137.0" prefHeight="420.0" prefWidth="932.0">
+        <columns>
+          <TableColumn prefWidth="238.0" text="Libéllé" />
+          <TableColumn minWidth="0.0" prefWidth="214.0" text="Quantité" />
+            <TableColumn prefWidth="479.0" text="Description" />
+        </columns>
+      </TableView>
+      <Button fx:id="btnRetour" layoutX="11.0" layoutY="5.0" mnemonicParsing="false" onAction="#handleButtonRetour" prefHeight="54.0" prefWidth="202.0" text="⏴Retour à l'accueil">
+         <font>
+            <Font name="System Bold" size="17.0" />
+         </font>
+      </Button>
+      <Button fx:id="btnRecherche" layoutX="777.0" layoutY="59.0" mnemonicParsing="false" onAction="#handleButtonRecherche" prefHeight="54.0" prefWidth="183.0" text="Rechercher 🔍">
+         <font>
+            <Font size="21.0" />
+         </font>
+      </Button>
+      <TextField fx:id="txtRecherche" layoutX="518.0" layoutY="53.0" prefHeight="65.0" prefWidth="232.0" />
+      <Label layoutX="28.0" layoutY="63.0" text="Consulter le stock">
+         <font>
+            <Font size="38.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

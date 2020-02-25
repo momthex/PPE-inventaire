@@ -1,11 +1,11 @@
 package controllers;
 
+import java.io.IOException;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import views.StageLoader;
 
 public class SelectionMenu {
 
@@ -16,12 +16,15 @@ public class SelectionMenu {
 	private Button btnEditer;
 
 	@FXML
-	private void handleButtonConsultation(ActionEvent event){
-
+	private void handleButtonConsultation(ActionEvent event) throws IOException{
+		StageLoader stage = new StageLoader();
+		stage.setStage("stageConsultation", "Consultation");
 	}
 
 	@FXML
-	private void handleButtonEdition(ActionEvent event){
+	private void handleButtonEdition(ActionEvent event) throws IOException{
+		StageLoader stage = new StageLoader();
+		stage.setStage("stageEdition", "Edition");
 
 	}
 }

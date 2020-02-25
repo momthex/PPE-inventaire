@@ -1,8 +1,11 @@
 package application;
 
+import classes.Produit;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
+import models.Mproduit;
+import models.modeTeset;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 
@@ -31,5 +34,10 @@ public class Main extends Application {
 
 	public static void main(String[] args) {
 		launch(args);
+		/*Mproduit t = new Mproduit();
+		Produit p = new Produit();
+
+		p = t.find(1);
+		System.out.println(p.toString());*/
 	}
 }

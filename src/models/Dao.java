@@ -1,11 +1,15 @@
 package models;
 
+import java.lang.reflect.Method;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.PreparedStatement;
+import com.mysql.jdbc.ResultSetMetaData;
 
 public abstract class Dao<T> implements IDao<T> {
 
@@ -28,22 +32,41 @@ public abstract class Dao<T> implements IDao<T> {
 	}
 
 	@Override
-	public List<T> getAll() {
-		List<T> items = null;
-
-		return items;
-	}
-
-	@Override
-	public T getById(int id) {
-		T obj = null;
+	public List<Object> getAll() {
+		List<Object> items = null;
+		Object obj = null;
 
 		try {
 	    	ResultSet result = this.conn.createStatement(
 	        ResultSet.TYPE_SCROLL_INSENSITIVE,
-	        ResultSet.CONCUR_READ_ONLY).executeQuery("SELECT * FROM produit WHERE id = " + id);
+	        ResultSet.CONCUR_READ_ONLY).executeQuery("SELECT * FROM " + this.table);
 	    	if(result.first()){
-	    		//obj = (T)new Object(result.getInt("id"), result.getString("libelle"), result.getInt("quantite"), result.getString("description"));
+	    		obj = creatObj("Produit", VALEUR A RENTRER);
+	    		items.add(obj);
+	    	}
+	    	return items;
+	    } catch (SQLException e) {
+	    	e.printStackTrace();
+	    	return null;
+	    }
+	}
+
+	@Override
+	public Object getById(int id) {
+		Object obj = null;
+		ResultSetMetaData rsmd = null;
+
+		try {
+	    	ResultSet result = this.conn.createStatement(
+	        ResultSet.TYPE_SCROLL_INSENSITIVE,
+	        ResultSet.CONCUR_READ_ONLY).executeQuery("SELECT * FROM " + this.table + " WHERE id = " + id);
+	    	if(result.first()){
+	    		rsmd = (ResultSetMetaData) result.getMetaData();
+	    		Object[] tabValues = new Object[rsmd.getColumnCount()];
+	    		for (int i = 0; i < rsmd.getColumnCount(); i++) {
+	    			tabValues[i] = ;
+				}
+	    		obj = creatObj("Produit", VALEUR A RENTRER);
 	    	}
 	    } catch (SQLException e) {
 	    	e.printStackTrace();
@@ -51,26 +74,136 @@ public abstract class Dao<T> implements IDao<T> {
 		return obj;
 	}
 
+	/**
+     * Met à jour le niveau du membre.
+     *
+     * @param tabValues
+     *            Ordre dans le tableau : -> Description -> Libellé -> Quantité
+     */
 	@Override
-	public T add(T item) {
+	public boolean add(Object[] tabValues) {
+		List<String> colonnes = getColonnes();
+		String SQL = "INSERT INTO " + this.table + "(";
 
-		return item;
-	}
+		//Preparation de la requete SQL
+		for (String colonne : colonnes) {
+			SQL += colonne + ", ";
+		}
+		SQL = SQL.substring(0, SQL.length() - 2);
+		SQL += ") VALUES (";
+		for (int i = 1; i <= tabValues.length; i++) {
+			SQL += "?, ";
+		}
+		SQL = SQL.substring(0, SQL.length() - 2);
+		SQL += ")";
 
-	@Override
-	public T update(T item) {
-
-		return item;
-	}
-
-	@Override
-	public boolean delete(T item) {
+		//Remplissage de la requete SQL
 		try {
+			PreparedStatement st = (PreparedStatement) conn.prepareStatement(SQL);
+			for (int i = 1; i <= tabValues.length; i++) {
+				st.setObject(i, tabValues[i - 1]);
+			}
+			st.executeUpdate();
+			return true;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return false;
+		}
+	}
 
+	/**
+     * Met à jour le niveau du membre.
+     *
+     * @param tabValues
+     *            Ordre dans le tableau :-> Description -> Libellé -> Quantité -> Id
+     */
+	@Override
+	public boolean update(Object[] tabValues) {
+		List<String> colonnes = getColonnes();
+		String SQL = "UPDATE " + this.table + " SET ";
+
+		//Preparation de la requete SQL
+		for (String colonne : colonnes) {
+			SQL += colonne + " = ?, ";
+		}
+		SQL = SQL.substring(0, SQL.length() - 2);
+		SQL += " WHERE id = ?;";
+
+		//Remplissage de la requete SQL
+		try {
+			PreparedStatement st = (PreparedStatement) conn.prepareStatement(SQL);
+			for (int i = 1; i <= tabValues.length; i++) {
+				st.setObject(i, tabValues[i - 1]);
+			}
+			st.executeUpdate();
+			return true;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return false;
+		}
+	}
+
+	@Override
+	public boolean delete(int id) {
+		 String SQL = "DELETE FROM " + this.table + "WHERE id = " + id;
+		try {
+			PreparedStatement st = (PreparedStatement) conn.prepareStatement(SQL);
+			st.executeUpdate();
+			return true;
 		} catch (Exception e) {
 			return false;
 		}
-		return true;
 	}
 
+	//Récupere les colonnes de la table
+	public List<String> getColonnes(){
+		List<String> listeColonne = new ArrayList<String>();
+		String SQL = "select COLUMN_NAME, COLUMN_TYPE from INFORMATION_SCHEMA.COLUMNS where table_name='" + this.table +"' AND table_schema='gsb_inventaire' AND COLUMN_NAME<>'id';";
+
+		ResultSet rs;
+		try {
+			rs = this.conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(SQL);
+			while (rs.next()) {
+				listeColonne.add(rs.getString(1));
+			}
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		return listeColonne;
+	}
+
+	//Reflextion
+	public Object creatObj(String typeClass, Object[] tabValues){
+		String class_name="classes."+typeClass;
+		try
+		{
+
+			Class<?> cls = Class.forName(class_name);
+			Object obj = cls.newInstance();
+
+			Method[] methods =  cls.getDeclaredMethods();
+			List<Method> mSet = new ArrayList<>();
+
+			//Récupération des setters
+			for( int i = 0 ; i < methods.length ; i++ ) {
+				if(methods[i].getName().startsWith("set", 1)) {
+					mSet.add(methods[i]);
+				}
+			}
+
+			for (Method method : mSet) {
+				method.invoke(obj, tabValues);
+			}
+
+			System.out.println("*****************");
+			System.out.println(obj+" "+obj.getClass().getSimpleName());
+			return obj;
+		}
+		catch( Exception e )
+		{
+			e.printStackTrace();
+			return null;
+		}
+	}
 }

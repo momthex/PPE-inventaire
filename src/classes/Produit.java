@@ -9,6 +9,10 @@ public class Produit {
 	//CONSTRUCTEUR
 	public Produit() {
 		super();
+		this.id = -1;
+		this.libelle = null;
+		this.quantite = -1;
+		this.description = null;
 	}
 	public Produit(String libelle, int quantite, String description) {
 		super();

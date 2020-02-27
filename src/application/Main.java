@@ -1,5 +1,7 @@
 package application;
 
+import java.util.List;
+
 import classes.Produit;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -33,9 +35,41 @@ public class Main extends Application {
 	}
 
 	public static void main(String[] args) {
-		launch(args);
-		/*Mproduit t = new Mproduit();
+		//launch(args);
+		Mproduit t = new Mproduit();
+
+		//Select
+		Integer id = 5;
 		Produit p = new Produit();
+
+		p = (Produit) t.getById(id);
+		//System.out.println(p.toString());
+
+		//Modification
+		/*String des = "description modifié";
+		String med = "Medoc modifié";
+		Integer i = 1;
+		Integer id = 5;
+
+		Object[] tabTest = {des, med, i, id};
+		if(t.update(tabTest)) {
+			System.out.println("modification effectuée");
+		}*/
+
+
+		//Ajout
+		/*String des = "description de test";
+		String med = "Medoc";
+		Integer i = 50;
+
+		Object[] tabTest = {des, med, i};
+		if(t.add(tabTest)){
+			System.out.println("Ajout effectué");
+		}*/
+
+
+		//Get par id
+		/*Produit p = new Produit();
 
 		p = t.find(1);
 		System.out.println(p.toString());*/

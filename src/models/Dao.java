@@ -10,6 +10,8 @@ import java.util.List;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
 import com.mysql.jdbc.ResultSetMetaData;
+import com.sun.jmx.snmp.Timestamp;
+import com.sun.xml.internal.ws.util.StringUtils;
 
 public abstract class Dao<T> implements IDao<T> {
 
@@ -19,16 +21,16 @@ public abstract class Dao<T> implements IDao<T> {
 	public Dao() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-            System.out.println("DRIVER OK ! ");
+			System.out.println("DRIVER OK ! ");
 
-            String url = "jdbc:mysql://localhost:3308/gsb_inventaire";
+			String url = "jdbc:mysql://localhost:3308/gsb_inventaire";
 
-            conn = (Connection) DriverManager.getConnection(url,"root","");
-            System.out.println("Connection effective !");
+			conn = (Connection) DriverManager.getConnection(url,"root","");
+			System.out.println("Connection effective !");
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -36,7 +38,7 @@ public abstract class Dao<T> implements IDao<T> {
 		List<Object> items = null;
 		Object obj = null;
 
-		try {
+		/*try {
 	    	ResultSet result = this.conn.createStatement(
 	        ResultSet.TYPE_SCROLL_INSENSITIVE,
 	        ResultSet.CONCUR_READ_ONLY).executeQuery("SELECT * FROM " + this.table);
@@ -48,7 +50,8 @@ public abstract class Dao<T> implements IDao<T> {
 	    } catch (SQLException e) {
 	    	e.printStackTrace();
 	    	return null;
-	    }
+	    }*/
+		return null;
 	}
 
 	@Override
@@ -57,29 +60,32 @@ public abstract class Dao<T> implements IDao<T> {
 		ResultSetMetaData rsmd = null;
 
 		try {
-	    	ResultSet result = this.conn.createStatement(
-	        ResultSet.TYPE_SCROLL_INSENSITIVE,
-	        ResultSet.CONCUR_READ_ONLY).executeQuery("SELECT * FROM " + this.table + " WHERE id = " + id);
-	    	if(result.first()){
-	    		rsmd = (ResultSetMetaData) result.getMetaData();
-	    		Object[] tabValues = new Object[rsmd.getColumnCount()];
-	    		for (int i = 0; i < rsmd.getColumnCount(); i++) {
-	    			tabValues[i] = ;
+			ArrayList al = new ArrayList();
+			ResultSet result = this.conn.createStatement(
+					ResultSet.TYPE_SCROLL_INSENSITIVE,
+					ResultSet.CONCUR_READ_ONLY).executeQuery("SELECT * FROM " + this.table + " WHERE id = " + id);
+
+			if(result.first()){
+				rsmd = (ResultSetMetaData) result.getMetaData();
+				Object[] tabValues = new Object[rsmd.getColumnCount()];
+				for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+					tabValues[i-1] = result.getObject(i);
 				}
-	    		obj = creatObj("Produit", VALEUR A RENTRER);
-	    	}
-	    } catch (SQLException e) {
-	    	e.printStackTrace();
-	    }
+				al.add(tabValues);
+				//obj = creatObj("Produit", al);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return obj;
 	}
 
 	/**
-     * Met à jour le niveau du membre.
-     *
-     * @param tabValues
-     *            Ordre dans le tableau : -> Description -> Libellé -> Quantité
-     */
+	 * Met à jour le niveau du membre.
+	 *
+	 * @param tabValues
+	 *            Ordre dans le tableau : -> Description -> Libellé -> Quantité
+	 */
 	@Override
 	public boolean add(Object[] tabValues) {
 		List<String> colonnes = getColonnes();
@@ -112,11 +118,11 @@ public abstract class Dao<T> implements IDao<T> {
 	}
 
 	/**
-     * Met à jour le niveau du membre.
-     *
-     * @param tabValues
-     *            Ordre dans le tableau :-> Description -> Libellé -> Quantité -> Id
-     */
+	 * Met à jour le niveau du membre.
+	 *
+	 * @param tabValues
+	 *            Ordre dans le tableau :-> Description -> Libellé -> Quantité -> Id
+	 */
 	@Override
 	public boolean update(Object[] tabValues) {
 		List<String> colonnes = getColonnes();
@@ -145,7 +151,7 @@ public abstract class Dao<T> implements IDao<T> {
 
 	@Override
 	public boolean delete(int id) {
-		 String SQL = "DELETE FROM " + this.table + "WHERE id = " + id;
+		String SQL = "DELETE FROM " + this.table + "WHERE id = " + id;
 		try {
 			PreparedStatement st = (PreparedStatement) conn.prepareStatement(SQL);
 			st.executeUpdate();
@@ -174,11 +180,10 @@ public abstract class Dao<T> implements IDao<T> {
 	}
 
 	//Reflextion
-	public Object creatObj(String typeClass, Object[] tabValues){
+	public Object creatObj(String typeClass, ArrayList tabValues){
 		String class_name="classes."+typeClass;
 		try
 		{
-
 			Class<?> cls = Class.forName(class_name);
 			Object obj = cls.newInstance();
 
@@ -187,13 +192,33 @@ public abstract class Dao<T> implements IDao<T> {
 
 			//Récupération des setters
 			for( int i = 0 ; i < methods.length ; i++ ) {
-				if(methods[i].getName().startsWith("set", 1)) {
+				if(methods[i].getName().startsWith("set")) {
 					mSet.add(methods[i]);
 				}
 			}
 
-			for (Method method : mSet) {
-				method.invoke(obj, tabValues);
+			for (int f = 0; f < tabValues.size(); f++) {
+				Object[] val = (Object[]) tabValues.get(f);
+				for (Method method : mSet) {
+					int e = 0;
+					List<String> tabName = getColonnes();
+					tabName.add("Id");
+					for (String name : tabName) {
+						System.out.println(name);
+						if(method.getName().contains((CharSequence) StringUtils.capitalize(name))){
+							if(val[e].getClass() == Integer.class) {
+								method = cls.getMethod(method.getName(), new Class[] {int.class} );
+								method.invoke(obj, new Object[] {val[e]});
+							} else if (val[e].getClass() == String.class) {
+								method = cls.getMethod(method.getName(), new Class[] {String.class} );
+								method.invoke(obj, new Object[] {val[e]});
+							} else if (val[e].getClass() == Timestamp.class){
+								method = cls.getMethod(method.getName(), new Class[] {Timestamp.class} );
+							}
+						}
+						e++;
+					}
+				}
 			}
 
 			System.out.println("*****************");

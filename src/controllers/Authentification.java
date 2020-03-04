@@ -2,12 +2,14 @@ package controllers;
 
 import java.io.IOException;
 
+import classes.Personnel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import models.Mauthentification;
 import views.StageLoader;
 
 public class Authentification {
@@ -26,7 +28,10 @@ public class Authentification {
 
 	@FXML
 	private void handleButtonConnexion(ActionEvent event) throws IOException{
-		if(this.txtPassword.getText().equals("a")){
+		Mauthentification auth = new Mauthentification();
+		Personnel user;
+		user = auth.checkAuth(this.txtLogin.getText(), this.txtPassword.getText());
+		if(user != null){
 			lblErreurConnexion.setVisible(false);
 			StageLoader stage = new StageLoader();
 			stage.setStage("stageAcceuil", "Acceuil");

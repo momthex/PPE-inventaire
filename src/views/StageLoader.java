@@ -2,6 +2,7 @@ package views;
 
 import java.io.IOException;
 
+import classes.Personnel;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
@@ -19,7 +20,7 @@ public class StageLoader {
 
 
 	public void setStage(String nameScene, String nameTitle) throws IOException {
-		focusStage.setTitle("nameScene");
+		focusStage.setTitle(nameScene);
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(getClass().getResource(nameScene+".fxml"));
 		root = (AnchorPane) loader.load(); // Création de la scène de la deuxième fenêtre

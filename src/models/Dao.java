@@ -151,7 +151,7 @@ public abstract class Dao<T> implements IDao<T> {
 
 	@Override
 	public boolean delete(int id) {
-		String SQL = "DELETE FROM " + this.table + "WHERE id = " + id;
+		String SQL = "DELETE FROM " + this.table + " WHERE id = " + id;
 		try {
 			PreparedStatement st = (PreparedStatement) conn.prepareStatement(SQL);
 			st.executeUpdate();

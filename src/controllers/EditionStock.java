@@ -1,5 +1,7 @@
 package controllers;
 
+import org.omg.PortableInterceptor.USER_EXCEPTION;
+
 import classes.Historique;
 import classes.Produit;
 import javafx.collections.FXCollections;
@@ -43,7 +45,7 @@ public class EditionStock {
 		//listeProduit.getSelectionModel().selectedIndexProperty().addListener(observable -> System.out.printf("Indice sélectionné: %d", listeProduit.getSelectionModel().getSelectedIndex()).println());
 		System.out.println(listeProduit.getSelectionModel().getSelectedItem().getQuantite());
 		try {
-			listeProduit.getSelectionModel().getSelectedItem().subQteProduit(Integer.parseInt(txtQuantite.getText()));
+			//listeProduit.getSelectionModel().getSelectedItem().subQteProduit(Integer.parseInt(txtQuantite.getText()));
 		} catch (Exception e) {
 			System.out.println("La converstion lettre en nombre n'est pas possible : "+ e);
 		}

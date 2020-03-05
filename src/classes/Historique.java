@@ -5,6 +5,7 @@ import com.sun.jmx.snmp.Timestamp;
 public class Historique {
 	private int id;
 	private Timestamp date_time;
+	private String nom_produit;
 	private int id_personnel;
 	private int id_produit;
 	private int quantite;
@@ -77,5 +78,11 @@ public class Historique {
 		this.quantite = quantite;
 	}
 
+	public String getNom_produit() {
+		return nom_produit;
+	}
 
+	public void setNom_produit(String nom_produit) {
+		this.nom_produit = nom_produit;
+	}
 }

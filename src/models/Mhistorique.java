@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import classes.Historique;
+import classes.Produit;
 
 public class Mhistorique extends Dao {
 
@@ -26,6 +27,9 @@ public class Mhistorique extends Dao {
 				h.setId_personnel(rs.getInt(3));
 				h.setId_produit(rs.getInt(4));
 				h.setQuantite(rs.getInt(5));
+
+				Mproduit mp = new Mproduit();
+				h.setNom_produit(mp.getById(rs.getInt(4)).getLibelle());
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -48,6 +52,10 @@ public class Mhistorique extends Dao {
 				h.setId_personnel(rs.getInt(3));
 				h.setId_produit(rs.getInt(4));
 				h.setQuantite(rs.getInt(5));
+
+				Mproduit mp = new Mproduit();
+				h.setNom_produit(mp.getById(rs.getInt(4)).getLibelle());
+
 				items.add(h);
 			}
 	    	return items;

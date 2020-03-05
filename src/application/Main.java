@@ -7,19 +7,23 @@ import classes.Personnel;
 import classes.Produit;
 import controllers.Authentification;
 import controllers.Cauthentification;
+import controllers.Cedition;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
+import models.Mhistorique;
 import models.Mproduit;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
@@ -90,17 +94,7 @@ public class Main extends Application {
 		Button btnConnexion = new Button("Connexion");
 		btnConnexion.setLayoutX(113.0);
 		btnConnexion.setLayoutY(252.0);
-		btnConnexion.setOnAction(e -> {
-			Cauthentification auth = new Cauthentification();
-			user = auth.checkAuth(txtLogin.getText(), txtPassword.getText());
-			if(user != null){
-				window.setScene(sceneAcceuil);
-				window.setTitle("Acceuil");
-				lblErreurConnexion.setVisible(false);
-			} else {
-				lblErreurConnexion.setVisible(true);
-			}
-		});
+
 
 		//sceneConnexion
 		AnchorPane layout1 = new AnchorPane();
@@ -112,19 +106,11 @@ public class Main extends Application {
 		btnConsulter.setLayoutX(677.0);
 		btnConsulter.setLayoutY(443.0);
 		btnConsulter.setPrefSize(192.0, 83.0);
-		btnConsulter.setOnAction(e -> {
-			window.setScene(sceneConsultation);
-			window.setTitle("Consultation");
-		});
 
 		Button btnEditer = new Button("Modifier");
 		btnEditer.setLayoutX(134.0);
 		btnEditer.setLayoutY(443.0);
 		btnEditer.setPrefSize(192.0, 83.0);
-		btnEditer.setOnAction(e -> {
-			window.setScene(sceneEdition);
-			window.setTitle("Edition");
-		});
 
 		ImageView champImgConsulter = new ImageView("/asset/consulter.png");
 		champImgConsulter.setFitHeight(261.0);
@@ -149,10 +135,6 @@ public class Main extends Application {
 		btnRetourAcceuil.setLayoutX(11.0);
 		btnRetourAcceuil.setLayoutY(5.0);
 		btnRetourAcceuil.setPrefSize(202.0, 54.0);
-		btnRetourAcceuil.setOnAction(e -> {
-			window.setScene(sceneAcceuil);
-			window.setTitle("Acceuil");
-		});
 
 		TextField txtRecherche = new TextField();
 		txtRecherche.setLayoutX(518);
@@ -191,10 +173,6 @@ public class Main extends Application {
 		btnRetourAcceuil2.setLayoutX(11.0);
 		btnRetourAcceuil2.setLayoutY(5.0);
 		btnRetourAcceuil2.setPrefSize(202.0, 54.0);
-		btnRetourAcceuil2.setOnAction(e -> {
-			window.setScene(sceneAcceuil);
-			window.setTitle("Acceuil");
-		});
 
 		ListView listeProduit = new ListView();
 		listeProduit.setLayoutX(79);
@@ -217,39 +195,134 @@ public class Main extends Application {
 		tableHistoriquePersonel.setPrefSize(352, 200);
 		TableColumn<Produit, String> colLibHisto = new TableColumn<>("Libellé");
 		colLibHisto.setPrefWidth(258);
+		colLibHisto.setResizable(false);
 		TableColumn<Produit, Integer> colQteHisto = new TableColumn<>("Quantité");
-		colQteHisto.setPrefWidth(93);
-		tableHistoriquePersonel.getColumns().addAll(colLibHisto, colQteHisto);
+		colQteHisto.setPrefWidth(92);
+		colQteHisto.setResizable(false);
+		TableColumn<Produit, Integer> colIdHisto = new TableColumn<>("Id");
+		colIdHisto.setPrefWidth(0);
+		colIdHisto.setVisible(false);
+		tableHistoriquePersonel.getColumns().addAll(colLibHisto, colQteHisto, colIdHisto);
 
-	      Label labelDerniereAction = new Label("Vos dernières actions");
-	      labelDerniereAction.setLayoutX(497.0);
-	      labelDerniereAction.setLayoutY(105.0);
 
-	      Button btnEffacerAction = new Button("Effacer l'action");
-	      btnEffacerAction.setLayoutX(777.0);
-	      btnEffacerAction.setLayoutY(166.0);
-	      btnEffacerAction.setPrefSize(135, 31);
-	      btnEffacerAction.setOnAction(e -> {
-	    	  System.out.println("Le code!");
-			});
+		Label labelDerniereAction = new Label("Vos dernières actions");
+		labelDerniereAction.setLayoutX(497.0);
+		labelDerniereAction.setLayoutY(105.0);
 
-	      Label labelRetProd = new Label("Retirez des produits");
-	      labelRetProd.setLayoutX(322);
-	      labelRetProd.setLayoutY(31);
+		Button btnEffacerAction = new Button("Effacer l'action");
+		btnEffacerAction.setLayoutX(777.0);
+		btnEffacerAction.setLayoutY(166.0);
+		btnEffacerAction.setPrefSize(135, 31);
 
-	      Button btnValider = new Button("Valider");
-	      btnValider.setLayoutX(805.0);
-	      btnValider.setLayoutY(486.0);
-	      btnValider.setPrefSize(168, 85);
-	      btnValider.setOnAction(e -> {
-				System.out.println("Le code!");
-			});
+		Label labelRetProd = new Label("Retirez des produits");
+		labelRetProd.setLayoutX(322);
+		labelRetProd.setLayoutY(31);
+
+		Button btnValider = new Button("Valider");
+		btnValider.setLayoutX(805.0);
+		btnValider.setLayoutY(486.0);
+		btnValider.setPrefSize(168, 85);
 
 		//sceneEdition
 		AnchorPane layout4 = new AnchorPane();
 		layout4.setBackground(Background.EMPTY);
 		layout4.getChildren().addAll(btnRetourAcceuil2, listeProduit, txtQuantite, labelTxtQte, tableHistoriquePersonel, labelDerniereAction, btnEffacerAction, labelRetProd, btnValider);
 		sceneEdition = new Scene(layout4, 1000, 600);
+
+
+		//Action listener
+		btnConnexion.setOnAction(e -> { //Bouton pour se connecter de la sceneConnexion
+			Cauthentification auth = new Cauthentification();
+			user = auth.checkAuth(txtLogin.getText(), txtPassword.getText());
+			if(user != null){
+				window.setScene(sceneAcceuil);
+				window.setTitle("Acceuil");
+				lblErreurConnexion.setVisible(false);
+			} else {
+				lblErreurConnexion.setVisible(true);
+			}
+		});
+
+		btnConsulter.setOnAction(e -> { //Bouton pour changer de vue de la sceneAcceuil
+			window.setScene(sceneConsultation);
+			window.setTitle("Consultation");
+		});
+
+		btnEditer.setOnAction(e -> { //Bouton pour changer de vue de la sceneAcceuil
+			Cedition ce = new Cedition();
+			Mproduit produit = new Mproduit();
+			Mhistorique mh = new Mhistorique();
+
+			//Charger la liste des produits
+			listeProduit.getItems().clear();
+			for (Produit prod : produit.getAll()) {
+				listeProduit.getItems().add(prod);
+			}
+			listeProduit.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+
+			//Charger la table d'historique d'une personne
+			tableHistoriquePersonel.getItems().clear();
+			for (Historique histo : mh.getAll()) {
+				tableHistoriquePersonel.getItems().add(histo);
+				colLibHisto.setCellValueFactory(new PropertyValueFactory<>("nom_produit"));
+				colQteHisto.setCellValueFactory(new PropertyValueFactory<>("quantite"));
+				colIdHisto.setCellValueFactory(new PropertyValueFactory<>("id"));
+			}
+			//tableHistoriquePersonel.add(ce.loadHistorique());
+			window.setScene(sceneEdition);
+			window.setTitle("Edition");
+		});
+
+		btnEffacerAction.setOnAction(e -> { //Bouton pour effacer un historique de la sceneEdition
+			Cedition ce= new Cedition();
+			Mhistorique mh = new Mhistorique();
+
+			System.out.println("Effacement de la ligne");
+			ce.effacerAction((Historique) tableHistoriquePersonel.getSelectionModel().getSelectedItem());
+
+			tableHistoriquePersonel.getItems().clear();
+			for (Historique histo : mh.getAll()) {
+				tableHistoriquePersonel.getItems().add(histo);
+				colLibHisto.setCellValueFactory(new PropertyValueFactory<>("nom_produit"));
+				colQteHisto.setCellValueFactory(new PropertyValueFactory<>("quantite"));
+				colIdHisto.setCellValueFactory(new PropertyValueFactory<>("id"));
+			}
+		});
+
+		btnValider.setOnAction(e -> { //Bouton pour effectuer un retrait de la sceneEdition
+			try{
+			Cedition ce = new Cedition();
+			Mhistorique mh = new Mhistorique();
+			System.out.println("Retrait");
+			ce.valider((Produit) listeProduit.getSelectionModel().getSelectedItem(), Integer.parseInt(txtQuantite.getText()), user.getId());
+
+			tableHistoriquePersonel.getItems().clear();
+			for (Historique histo : mh.getAll()) {
+				tableHistoriquePersonel.getItems().add(histo);
+				colLibHisto.setCellValueFactory(new PropertyValueFactory<>("nom_produit"));
+				colQteHisto.setCellValueFactory(new PropertyValueFactory<>("quantite"));
+				colIdHisto.setCellValueFactory(new PropertyValueFactory<>("id"));
+			}
+
+			} catch (Exception e1) {
+				System.out.println("Le champ quantité doit être renseigné ou le produit sélectionné : " + e1);
+			}
+		});
+
+		btnRetourAcceuil.setOnAction(e -> { //Bouton pour changer de vue de la sceneConsultation
+			window.setScene(sceneAcceuil);
+			window.setTitle("Acceuil");
+		});
+
+		btnRetourAcceuil2.setOnAction(e -> { //Bouton pour changer de vue de la sceneEdition
+			window.setScene(sceneAcceuil);
+			window.setTitle("Acceuil");
+		});
+
+		btnRecherche.setOnAction(e -> { //Bouton pour effectuer une recherche de la sceneEdition
+			System.out.println("Recherche...!");
+		});
+
 
 		window.setScene(sceneConnexion);
 		window.setTitle("Connexion");

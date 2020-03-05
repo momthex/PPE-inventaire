@@ -1,5 +1,10 @@
 package classes;
 
+import java.sql.Timestamp;
+
+import models.Mhistorique;
+import models.Mproduit;
+
 public class Produit {
 	private int id;
 	private String libelle;
@@ -31,11 +36,26 @@ public class Produit {
 
 	//METHODE
 	public void addQteProduit(int qte) {
+		Mproduit mp = new Mproduit();
+
 		this.quantite+=qte;
+		Object[] tabValues = {this.description, this.libelle, this.quantite, this.id};
+		mp.update(tabValues);
 	}
 
-	public void subQteProduit(int qte) {
-		this.quantite-=qte;
+	public void subQteProduit(int qte, int idUser) {
+		if(this.quantite-qte>=0){
+			Mproduit mp = new Mproduit();
+			Mhistorique mh = new Mhistorique();
+
+			this.quantite-=qte;
+			Object[] tabValues = {this.description, this.libelle, this.quantite, this.id};
+			mp.update(tabValues);
+			Object[] tabValuesHistorique = {new Timestamp(System.currentTimeMillis()), idUser, this.id, qte};//date, id_personnel, id_produit, quantite
+			mh.add(tabValuesHistorique);
+		} else {
+			System.out.println("Impossible de laisser le stock en dessous de 0");
+		}
 	}
 
 	//ACCESSEUR

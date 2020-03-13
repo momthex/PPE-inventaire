@@ -4,8 +4,9 @@ import com.sun.jmx.snmp.Timestamp;
 
 public class Historique {
 	private int id;
-	private Timestamp date_time;
+	private java.sql.Timestamp  date_time;
 	private String nom_produit;
+	private String nom_prenom_personnel;
 	private int id_personnel;
 	private int id_produit;
 	private int quantite;
@@ -19,7 +20,7 @@ public class Historique {
 		this.id_produit = -1;
 		this.quantite = -1;
 	}
-	public Historique(Timestamp date_time, int id_personnel, int id_produit, int quantite) {
+	public Historique(java.sql.Timestamp date_time, int id_personnel, int id_produit, int quantite) {
 		super();
 		this.date_time = date_time;
 		this.id_personnel = id_personnel;
@@ -27,7 +28,7 @@ public class Historique {
 		this.quantite = quantite;
 	}
 
-	public Historique(int id, Timestamp date_time, int id_personnel, int id_produit, int quantite) {
+	public Historique(int id, java.sql.Timestamp date_time, int id_personnel, int id_produit, int quantite) {
 		super();
 		this.id = id;
 		this.date_time = date_time;
@@ -46,12 +47,12 @@ public class Historique {
 		this.id = id;
 	}
 
-	public Timestamp getDate_time() {
+	public java.sql.Timestamp getDate_time() {
 		return date_time;
 	}
 
-	public void setDate_time(Timestamp date_time) {
-		this.date_time = date_time;
+	public void setDate_time(java.sql.Timestamp timestamp) {
+		this.date_time = timestamp;
 	}
 
 	public int getId_personnel() {
@@ -84,5 +85,13 @@ public class Historique {
 
 	public void setNom_produit(String nom_produit) {
 		this.nom_produit = nom_produit;
+	}
+
+	public String getNom_prenom_personnel() {
+		return nom_prenom_personnel;
+	}
+
+	public void setNom_Prenom_personnel(String nom_prenom_personnel) {
+		this.nom_prenom_personnel = nom_prenom_personnel;
 	}
 }

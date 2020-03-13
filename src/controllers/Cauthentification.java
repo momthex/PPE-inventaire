@@ -2,7 +2,6 @@ package controllers;
 
 import classes.Personnel;
 import models.Mauthentification;
-import views.StageLoader;
 
 public class Cauthentification {
 

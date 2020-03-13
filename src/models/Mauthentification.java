@@ -18,11 +18,12 @@ public class Mauthentification extends Dao {
 		try {
 			ResultSet rs = this.conn.createStatement(
 					ResultSet.TYPE_SCROLL_INSENSITIVE,
-					ResultSet.CONCUR_READ_ONLY).executeQuery("SELECT id, nom, prenom FROM " + this.table + " WHERE login = '" + login + "' AND passWord = '" + password +"'");
+					ResultSet.CONCUR_READ_ONLY).executeQuery("SELECT id, nom, prenom, isAdmin FROM " + this.table + " WHERE login = '" + login + "' AND passWord = '" + password +"'");
 			while(rs.next()){
 				p.setId(rs.getInt(1));
 				p.setNom(rs.getString(2));
 				p.setPrenom(rs.getString(3));
+				p.setIsAdmin(rs.getBoolean(4));
 				return p;
 			}
 		} catch (SQLException e) {

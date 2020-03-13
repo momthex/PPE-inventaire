@@ -89,7 +89,7 @@ public abstract class Dao<T> implements IDao<T> {
 	@Override
 	public boolean add(Object[] tabValues) {
 		List<String> colonnes = getColonnes();
-		String SQL = "INSERT INTO " + this.table + "(";
+		String SQL = "INSERT INTO " + this.table + " (";
 
 		//Preparation de la requete SQL
 		for (String colonne : colonnes) {
@@ -102,6 +102,7 @@ public abstract class Dao<T> implements IDao<T> {
 		}
 		SQL = SQL.substring(0, SQL.length() - 2);
 		SQL += ")";
+		System.out.println(SQL);
 
 		//Remplissage de la requete SQL
 		try {

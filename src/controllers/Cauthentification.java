@@ -1,5 +1,7 @@
 package controllers;
 
+import java.security.NoSuchAlgorithmException;
+
 import classes.Personnel;
 import models.Mauthentification;
 
@@ -12,10 +14,15 @@ public class Cauthentification {
 	public Personnel checkAuth(String login, String pass){
 		Mauthentification auth = new Mauthentification();
 		Personnel user;
-		user = auth.checkAuth(login, pass);
-		if(user != null){
-			return user;
-		} else {
+		try {
+			user = auth.checkAuth(login, pass);
+			if(user != null){
+				return user;
+			} else {
+				return null;
+			}
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
 			return null;
 		}
 	}

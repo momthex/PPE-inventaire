@@ -3,19 +3,22 @@ package views;
 import classes.Produit;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.TextFieldTreeTableCell;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.text.Font;
+import javafx.util.Callback;
 
 public class SceneConsulter extends AnchorPane {
 	public Button btnRetourAcceuil = new Button("⏴Retour à l'accueil");
 	public TextField txtRecherche = new TextField();
 	Label labelConsulterStock = new Label("Consulter le stock");
-	public TableView tableProduit =new TableView();
+	public TableView tableProduit = new TableView();
 	public TableColumn<Produit, String> colLib = new TableColumn<>("Libellé");
 	public TableColumn<Produit, Integer> colQte = new TableColumn<>("Quantité");
 	public TableColumn<Produit, String> colDesc = new TableColumn<>("Description");
@@ -45,6 +48,7 @@ public class SceneConsulter extends AnchorPane {
 		tableProduit.setLayoutX(28);
 		tableProduit.setLayoutY(137);
 		tableProduit.setPrefSize(932, 420);
+		tableProduit.setEditable(true);
 		colLib.setPrefWidth(400);
 		colQte.setPrefWidth(132);
 		colDesc.setPrefWidth(400);

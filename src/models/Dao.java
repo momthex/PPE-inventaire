@@ -25,7 +25,7 @@ public abstract class Dao<T> implements IDao<T> {
 
 			String url = "jdbc:mysql://localhost:3308/gsb_inventaire";
 
-			conn = (Connection) DriverManager.getConnection(url,"root","");
+			conn = (Connection) DriverManager.getConnection(url,"adGsbInv","ad*miN456");
 			System.out.println("Connection effective !");
 
 		} catch (Exception e) {
